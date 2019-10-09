@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 
-const url = 'http://192.168.42.75';
+const url = 'http://<local-ip-address-of-smartbridge>';
 let username: string;
 let lights: string[] = [];
 
