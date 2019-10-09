@@ -4,6 +4,15 @@ const url = 'http://192.168.42.75';
 let username: string;
 let lights: string[] = [];
 
+const top = document.querySelector('#top');
+let connectButton = document.querySelector('#connect-button');
+const lightsOnButton = document.querySelector('#lights-on-button');
+const lightsOffButton = document.querySelector('#lights-off-button');
+
+const connectedText = document.createElement('h1');
+connectedText.innerText = 'Connected';
+connectedText.id = 'connected-status';
+
 interface ConnectionResponse {
   error?: ConnectError;
   success?: ConnectSuccess;
@@ -101,6 +110,8 @@ const connect = async () => {
     }
     if (success) {
       username = success.username;
+      top.removeChild(connectButton);
+      top.appendChild(connectedText);
     }
   } catch (e) {
     errorResponse(e);
@@ -128,11 +139,18 @@ const switchLights = async (on: boolean) => {
       const putBody = {on};
       axios.put(`${url}/api/${username}/lights/${id}/state`, putBody)
     });
+    if (on) {
+      lightsOffButton.classList.remove('active');
+      lightsOnButton.classList.add('active');
+    } else {
+      lightsOnButton.classList.remove('active');
+      lightsOffButton.classList.add('active');
+    }
   } catch (e) {
     errorResponse(e);
   }
 }
 
-document.querySelector('#connect-button').addEventListener('click', connect);
-document.querySelector('#lights-on-button').addEventListener('click', () => switchLights(true));
-document.querySelector('#lights-off-button').addEventListener('click', () => switchLights(false));
+connectButton.addEventListener('click', connect);
+lightsOnButton.addEventListener('click', () => switchLights(true));
+lightsOffButton.addEventListener('click', () => switchLights(false));
